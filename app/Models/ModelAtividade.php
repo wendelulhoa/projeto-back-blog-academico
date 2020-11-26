@@ -10,5 +10,5 @@ class ModelAtividade extends Model
     use HasFactory;
     protected $table = "tb_atividade";
     public $timestamps = false;
-    protected $fillable = ['matricula_professor', 'cod_materia', 'titulo', 'texto_add', 'data', 'path_atividade'];
+    protected $fillable = ['matricula_professor', 'cod_materia', 'titulo', 'texto_add', 'data', 'path_atividade', 'entrega'];
 }

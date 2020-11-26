@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Aluno\ModelAluno;
 use App\Models\ModelAtividade;
 use App\Models\ModelAtividades;
+use App\Models\ModelCurso;
 use App\Models\ModelEndereco;
 use App\Models\ModelMateria;
 use App\Models\User;
@@ -29,6 +30,12 @@ class AlunoController extends Controller
                 ->join('tb_boletim', 'tb_boletim.cod_materia','=', 'tb_materia.cod_materia')
                 ->get();
             break;
+            case 'cursos':
+              return  ModelCurso::all();
+            break;
+            case 'nome':
+             return  ModelAluno::where('matricula_aluno', $request->matricula)->select('nome_aluno')->get();
+            break;
         }
     }
     public function create(Request $request){
@@ -43,7 +50,7 @@ class AlunoController extends Controller
                 'rg'=>$request->rg,
                 'matricula_aluno'=>$request->matricula,
                 'status'=> true,
-                'cod_curso'=>'545'
+                'cod_curso'=>$request->curso
             ]);
             ModelEndereco::create([
                 'endereco'=>$request->endereco,
@@ -72,10 +79,13 @@ class AlunoController extends Controller
         } else{
             $path ='';
         }
+        date_default_timezone_set('America/Sao_Paulo');
+        // CRIA UMA VARIAVEL E ARMAZENA A HORA ATUAL DO FUSO-HORÀRIO DEFINIDO (BRASÍLIA)
+            $dataLocal = date('d/m/Y H:i:s', time());
         ModelAtividades::create([
             'matricula_aluno'=>$request->matricula,
             'cod_atividade'=>$request->cod,
-            'data'=>3546,
+            'data'=>$dataLocal,
             'path_atividade'=>$path
         ]);
         

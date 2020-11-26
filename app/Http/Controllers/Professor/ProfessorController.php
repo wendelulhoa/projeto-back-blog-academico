@@ -27,7 +27,8 @@ class ProfessorController extends Controller
                 ->get();
             break;
             case 'atividade':
-                return ModelAtividade::where('cod_materia', 100)->paginate(5);
+                return ModelAtividade::where([['cod_materia', $request->cod]
+                ,['entrega', true]])->paginate(5);
             break;
             case 'alunos':
                 return ModelAluno::all();
@@ -37,7 +38,9 @@ class ProfessorController extends Controller
                 where('tb_atividades.cod_atividade', $request->cod)
                 ->paginate(5);
              break;
-            
+             case 'nome':
+              return  ModelProfessor::where('matricula_professor', $request->matricula)->select('nome_professor')->get();
+            break;
         }
     }
     public function create(Request $request)
@@ -86,8 +89,10 @@ class ProfessorController extends Controller
             'titulo'=>$request->titulo,
             'texto_add'=>$request->textoAdd,
             'data'=>$request->data,
-            'path_atividade'=>$path
+            'path_atividade'=>$path,
+            'entrega'=>$request->entrega
         ]);
+        return ['aa'];
     }
     public function notas(Request $request){
        
