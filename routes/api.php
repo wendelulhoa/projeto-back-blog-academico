@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CursoController;
 use App\Http\Controllers\Admin\MateriaController;
 use App\Http\Controllers\Aluno\AlunoController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Professor\ProfessorController;
 use Facade\FlareClient\Http\Response;
 use Facade\FlareClient\Stacktrace\File;
@@ -29,18 +30,38 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('/cadastro/materia', [MateriaController::class, 'create']);
 });
 Route::group(['prefix' => 'aluno'], function () {
-    Route::any('/find/admin', [AlunoController::class, 'index']);
+    Route::any('/find', [AlunoController::class, 'index']);
     Route::post('/cadastro', [AlunoController::class, 'create']);
+    Route::post('/cadastro/atividade', [AlunoController::class, 'atividade']);
+   
 });
 Route::group(['prefix' => 'professor'], function () {
-    Route::any('/find/admin', [AdminController::class, 'index']);
+    Route::any('/find', [ProfessorController::class, 'index']);
     Route::post('/cadastro', [ProfessorController::class, 'create']);
     Route::post('/cadastro/atividade', [ProfessorController::class, 'atividade']);
+    Route::post('/cadastro/nota', [ProfessorController::class, 'notas']);
 });
-Route::get('professor/atividades', function ()
+Route::get('professor/atividades/{args}', function ($args)
 {
-    $file = Storage::disk('public')->get('professor/atividades/nWVzd1BX5YADxfkg3eH722YCYylLmTMWietodC6M.mkv');
-    return response()->make($file,200,[ 'Content-Type' => 'video/mp4']);
+    $file = Storage::disk('local')->get("professor/atividades/$args");
+    if(strpos($args, 'pdf')){
+        return response()->make($file,200,[ 'Content-Type' => 'application/pdf']);
+    }else if(strpos($args, 'jpeg')){
+        return response()->make($file,200,[ 'Content-Type' => 'image/jpeg']);
+    }else if(strpos($args, 'png')){
+        return response()->make($file,200,[ 'Content-Type' => 'image/png']);
+    }else{
+        return response()->make($file,200,[ 'Content-Type' => 'application/vnd.oasis.opendocument.text']);
+    }
+    
+});
+Route::group([
+    'prefix' => 'auth',
+], function ($router) {
+    Route::any('refresh', [AuthController::class, 'refresh'])->name('refresh');
+    Route::any('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('me', [AuthController::class, 'me'])->name('me');
+    Route::any('login', [AuthController::class, 'login'])->name('login');
 });
 
 

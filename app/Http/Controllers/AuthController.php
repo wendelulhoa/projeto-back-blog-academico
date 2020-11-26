@@ -15,9 +15,9 @@ class AuthController extends Controller
     }
     public function login(Request $request)
     {
-        $email = $request['dsLogin'];
-        $password = $request['dsPass'];
-        if (!$token = Auth::attempt(['ds_login'=> $email, 'password'=> $password])) {
+        $email = $request['matricula'];
+        $password = $request['password'];
+        if (!$token = Auth::attempt(['matricula'=> $email, 'password'=> $password])) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -47,7 +47,8 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => Auth::factory()->getTTL() * 60
+            'expires_in' => Auth::factory()->getTTL() * 60,
+            'user'=> auth()->user()
         ]);
     }
 }

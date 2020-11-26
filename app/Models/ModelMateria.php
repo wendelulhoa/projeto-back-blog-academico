@@ -11,4 +11,8 @@ class ModelMateria extends Model
     protected $table = "tb_materia";
     public $timestamps = false;
     protected $fillable = ['cod_materia', 'nome_materia', 'status'];
+
+    public function atividade(){
+        return $this->hasMany(ModelAtividade::class, 'cod_materia', 'cod_materia');
+    }
 }

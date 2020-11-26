@@ -13,6 +13,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -29,6 +30,9 @@ class AdminController extends Controller
                 return ModelCurso::paginate(5);
             break;
             case 'admin':
+                return ModelMateria::paginate(5);
+            break;
+            case 'materia':
                 return ModelMateria::paginate(5);
             break;
         }
@@ -56,7 +60,7 @@ class AdminController extends Controller
             ]);
             User::create([
                 'matricula'=>$request->matricula,
-                'password'=>$request->password,
+                'password'=>Hash::make($request->password),
                 'adm'=>0
             ]);
         });
